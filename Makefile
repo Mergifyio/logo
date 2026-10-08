@@ -1,5 +1,5 @@
 SVG_FILES := $(wildcard *.svg)
-PNG_FILES := $(SVG_FILES:.svg=.png)
+PNG_FILES := $(SVG_FILES:.svg=-1024.png) $(SVG_FILES:.svg=-256.png) $(SVG_FILES:.svg=-128.png)
 ZIP_FILE := logo.zip
 SVGEXPORT := svgexport
 
@@ -12,9 +12,19 @@ $(ZIP_FILE): $(SVG_FILES) $(PNG_FILES)
 	zip -r $@ $^
 
 # Pattern rule to convert SVG to PNG
-%.png: %.svg
+%-1024.png: %.svg
 	@echo "Converting $< to $@..."
 	$(SVGEXPORT) "$<" "$@" png 100% "" 1024:
+
+# Pattern rule to convert SVG to PNG
+%-128.png: %.svg
+	@echo "Converting $< to $@..."
+	$(SVGEXPORT) "$<" "$@" png 100% "" 128:
+
+# Pattern rule to convert SVG to PNG
+%-256.png: %.svg
+	@echo "Converting $< to $@..."
+	$(SVGEXPORT) "$<" "$@" png 100% "" 256:
 
 # Clean target to remove generated PNGs and the zip
 .PHONY: clean
